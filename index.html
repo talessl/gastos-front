@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendário Financeiro</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Título principal -->
+    <h1>Meu Gasto Mensal</h1>
+
+    <!-- O nosso novo container que vai dividir a tela em duas partes -->
+    <div class="dashboard">
+      <!-- COLUNA DA ESQUERDA -->
+      <div class="coluna-esquerda">
+        <h2 style="margin-bottom: 15px; color: #374151">Dias do Mês</h2>
+        <div id="calendario"></div>
+
+        <form id="form-transacao">
+          <!-- (Deixe todos os seus inputs e o botão de Adicionar aqui dentro, exatamente como já estavam) -->
+          <input
+            type="number"
+            id="input-valor"
+            placeholder="Valor"
+            step="0.01"
+            min="0.01"
+            required
+          />
+          <select id="input-tipo">
+            <option value="LUCRO">Lucro</option>
+            <option value="GASTO">Gasto</option>
+          </select>
+          <input
+            type="text"
+            id="input-observacao"
+            placeholder="Ex: Ifood, Salário"
+          />
+          <input type="date" id="input-data" />
+          <button type="submit">Adicionar</button>
+        </form>
+      </div>
+
+      <!-- COLUNA DA DIREITA -->
+      <div class="coluna-direita">
+        <!-- O nosso novo botão de limpar o filtro -->
+        <button id="btn-ver-todos">Ver Todas as Transações</button>
+        <button id="btn-limpar-tudo">Limpar Tudo</button>
+
+        <div id="painel-transacoes"></div>
+      </div>
+    </div>
+    <div id="modal-confirmacao" class="modal-oculto">
+      <div class="modal-conteudo">
+        <h3>Tem certeza?</h3>
+        <p>
+          Isso vai apagar todas as suas transações para sempre. Essa ação não
+          pode ser desfeita!
+        </p>
+
+        <div class="modal-botoes">
+          <button id="btn-cancelar">Cancelar</button>
+          <button id="btn-confirmar">Sim, apagar tudo</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
