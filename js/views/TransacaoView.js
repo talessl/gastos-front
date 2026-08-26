@@ -10,7 +10,7 @@ export class TransacaoView {
       const classeCss = transacao.tipo === "LUCRO" ? "cor-lucro" : "cor-gasto";
       html += `<p> 
         ${transacao.observacao} - 
-        <span class="${classeCss}">R$ ${transacao.valor} (${transacao.tipo})</span> - ${new Date(transacao.data).toLocaleDateString("pt-BR")}
+        <span class="${classeCss}">R$ ${transacao.valor} (${transacao.tipo})</span> - ${new Date(transacao.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
       </p>`;
     });
 

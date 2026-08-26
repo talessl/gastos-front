@@ -1,15 +1,19 @@
 import { Transacao, TipoTransacao } from "../models/Transacao.js";
 import { TransacaoRepository } from "../repositories/TransacaoRepository.js";
+import { AcaoRepository } from "../repositories/AcaoRepository.js";
 import { CalendarioView } from "../views/CalendarioView.js";
 import { TransacaoView } from "../views/TransacaoView.js";
 import { ModalView } from "../views/ModalView.js";
+import { AcoesView } from "../views/AcoesView.js";
 
 export class AppController {
   constructor() {
     this.repositorio = new TransacaoRepository();
+    this.acaoRepositorio = new AcaoRepository();
     this.calendarioView = new CalendarioView();
     this.transacaoView = new TransacaoView();
     this.modalView = new ModalView();
+    this.acoesView = new AcoesView();
 
     this.transacoes = [];
 
@@ -30,6 +34,9 @@ export class AppController {
     document
       .getElementById("btn-confirmar")
       .addEventListener("click", () => this.limparTodas());
+    document
+      .getElementById("btn-buscar-acoes")
+      .addEventListener("click", () => this.buscarOportunidadesDeAcoes());
   }
 
   async carregarDados() {
@@ -108,5 +115,23 @@ export class AppController {
       listaFiltrada,
       this.calcularSaldo(listaFiltrada),
     );
+  }
+
+  async buscarOportunidadesDeAcoes() {
+    // 1. Avisa a View para mostrar a mensagem de Loading
+    this.acoesView.mostrarLoading();
+
+    try {
+      // 2. O Controller pede os dados ao Repositório
+      const precoMaximo = 10.0;
+      const oportunidades =
+        await this.acaoRepositorio.buscarOportunidades(precoMaximo);
+
+      // 3. O Controller entrega os dados mastigados para a View desenhar
+      this.acoesView.atualizar(oportunidades);
+    } catch (erro) {
+      console.error("Erro no fluxo de ações:", erro);
+      this.acoesView.mostrarErro();
+    }
   }
 }

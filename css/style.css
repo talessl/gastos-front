@@ -260,3 +260,105 @@ h1 {
   cursor: pointer;
   font-weight: bold;
 }
+
+/* Animação de Carregamento (Spinner) */
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border: 4px solid #f3f3f3; /* Cor de fundo */
+  border-top: 4px solid #3498db; /* Cor do giro (Azul) */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 1. O Container (Card principal) */
+.painel-acoes {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  max-width: 500px; /* Mantém o card com um tamanho elegante */
+  margin: 20px auto;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.painel-acoes h2 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 2. O Botão (Design moderno e interativo) */
+#btn-buscar-acoes {
+  width: 100%;
+  background-color: #2563eb; /* Azul corporativo moderno */
+  color: #ffffff;
+  border: none;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  margin-bottom: 24px;
+}
+
+#btn-buscar-acoes:hover {
+  background-color: #1d4ed8;
+}
+
+#btn-buscar-acoes:active {
+  transform: scale(0.98); /* Efeito de "clique" físico */
+}
+
+/* 3. A Lista (Removendo as bolinhas padrão) */
+#lista-acoes {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 4. Os Itens da Lista (Cards menores para cada ação) */
+#lista-acoes li {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Efeito de flutuar ao passar o mouse sobre a ação */
+#lista-acoes li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+}
+
+#lista-acoes li strong {
+  color: #0f172a;
+  font-size: 18px;
+}
+
+#lista-acoes li small {
+  display: block; /* Joga os indicadores para a linha de baixo */
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+}
