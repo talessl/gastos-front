@@ -3,18 +3,18 @@ export class TransacaoRepository {
     this.url = "http://localhost:4000/graphql";
   }
 
-  _getHeaders() {
-    const token = localStorage.getItem("token");
-    return {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
-  }
+  // _getHeaders() {
+  //   const token = localStorage.getItem("token");
+  //   return {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${token}`,
+  //   };
+  // }
 
   async _executar(query, variables = {}) {
     const resposta = await fetch(this.url, {
       method: "POST",
-      headers: this._getHeaders(),
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
     });
 

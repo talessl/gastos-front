@@ -19,8 +19,8 @@ export class AppController {
     this.transacoes = [];
 
     // AuthController avisa o AppController quando o login acontece
-    this.authController = new AuthController(() => this.carregarDados());
-    this.authController.verificarAutenticacao();
+    // this.authController = new AuthController(() => this.carregarDados());
+    // this.authController.verificarAutenticacao();
 
     document
       .getElementById("form-transacao")
@@ -40,6 +40,8 @@ export class AppController {
     document
       .getElementById("btn-buscar-acoes")
       .addEventListener("click", () => this.buscarOportunidadesDeAcoes());
+
+    this.carregarDados();
   }
 
   abrirModal() {
