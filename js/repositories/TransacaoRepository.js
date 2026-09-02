@@ -3,10 +3,34 @@ export class TransacaoRepository {
     this.url = "http://localhost:4000/graphql";
   }
 
+  _getHeaders() {
+    const token = localStorage.getItem("token");
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
+  async _executar(query, variables = {}) {
+    const resposta = await fetch(this.url, {
+      method: "POST",
+      headers: this._getHeaders(),
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const resultado = await resposta.json();
+    if (resultado.errors) {
+      throw new Error(resultado.errors[0].message);
+    }
+
+    return resultado.data;
+  }
+
   async buscarTodas() {
     const minhaQuery = `
       query {
         buscarTransacoes {
+          id
           valor
           tipo
           observacao
@@ -15,36 +39,36 @@ export class TransacaoRepository {
       }
     `;
 
-    // O 'await' espera o servidor responder
-    const resposta = await fetch(this.url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: minhaQuery }),
-    });
-
-    const resultado = await resposta.json();
-    return resultado.data.buscarTransacoes; // Devolve o array que veio da API
+    const data = await this._executar(minhaQuery);
+    return data.buscarTransacoes;
   }
 
   async salvar(transacao) {
     const minhaMutation = `
-      mutation {
+      mutation AdicionarTransacao($valor: Float!, $tipo: String!, $observacao: String!, $data: String!) {
         adicionarTransacao(
-          valor: ${transacao.valor}, 
-          tipo: "${transacao.tipo}", 
-          observacao: "${transacao.observacao}", 
-          data: "${transacao.data}"
+          valor: $valor,
+          tipo: $tipo,
+          observacao: $observacao,
+          data: $data
         ) {
+          id
           valor
+          tipo
+          observacao
+          data
         }
       }
     `;
 
-    await fetch(this.url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: minhaMutation }),
+    const data = await this._executar(minhaMutation, {
+      valor: transacao.valor,
+      tipo: transacao.tipo,
+      observacao: transacao.observacao,
+      data: transacao.data,
     });
+
+    return data.adicionarTransacao;
   }
 
   async limparTudo() {
@@ -54,10 +78,7 @@ export class TransacaoRepository {
       }
     `;
 
-    await fetch(this.url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: minhaMutation }),
-    });
+    const data = await this._executar(minhaMutation);
+    return data.limparTransacoes;
   }
 }

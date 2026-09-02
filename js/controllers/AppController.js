@@ -5,6 +5,7 @@ import { CalendarioView } from "../views/CalendarioView.js";
 import { TransacaoView } from "../views/TransacaoView.js";
 import { ModalView } from "../views/ModalView.js";
 import { AcoesView } from "../views/AcoesView.js";
+import { AuthController } from "./AuthController.js";
 
 export class AppController {
   constructor() {
@@ -17,7 +18,9 @@ export class AppController {
 
     this.transacoes = [];
 
-    this.carregarDados();
+    // AuthController avisa o AppController quando o login acontece
+    this.authController = new AuthController(() => this.carregarDados());
+    this.authController.verificarAutenticacao();
 
     document
       .getElementById("form-transacao")
@@ -39,15 +42,6 @@ export class AppController {
       .addEventListener("click", () => this.buscarOportunidadesDeAcoes());
   }
 
-  async carregarDados() {
-    // 1. Esperamos o repositório ir lá no GraphQL e voltar
-    this.transacoes = await this.repositorio.buscarTodas();
-
-    // 2. Só DEPOIS que os dados chegarem, nós desenhamos a tela
-    this.mostrarTodas();
-    this.calendarioView.desenharCalendario((data) => this.filtrarPorData(data));
-  }
-
   abrirModal() {
     this.modalView.abrir();
   }
@@ -56,19 +50,20 @@ export class AppController {
     this.modalView.fechar();
   }
 
+  async carregarDados() {
+    this.transacoes = await this.repositorio.buscarTodas();
+    this.mostrarTodas();
+    this.calendarioView.desenharCalendario((data) => this.filtrarPorData(data));
+  }
+
   async limparTodas() {
     await this.repositorio.limparTudo();
-
     await this.carregarDados();
-
     this.fecharModal();
   }
 
   mostrarTodas() {
-    // Limpa o campo de data para o usuário saber que o filtro foi removido
     document.getElementById("input-data").value = "";
-
-    // Manda a View atualizar usando a lista completa e o saldo total
     this.transacaoView.atualizar(
       this.transacoes,
       this.calcularSaldo(this.transacoes),
@@ -92,7 +87,6 @@ export class AppController {
 
   calcularSaldo(lista = this.transacoes) {
     let total = 0;
-
     lista.forEach((transacao) => {
       if (transacao.tipo == TipoTransacao.LUCRO) {
         total += transacao.valor;
@@ -100,17 +94,13 @@ export class AppController {
         total -= transacao.valor;
       }
     });
-
     return total;
   }
 
   filtrarPorData(dataSelecionada) {
-    // 1. Cria uma nova lista apenas com as transações daquela data
     const listaFiltrada = this.transacoes.filter(
       (t) => t.data === dataSelecionada,
     );
-
-    // 2. Manda a View atualizar usando apenas essa listinha e o saldo dela
     this.transacaoView.atualizar(
       listaFiltrada,
       this.calcularSaldo(listaFiltrada),
@@ -118,16 +108,11 @@ export class AppController {
   }
 
   async buscarOportunidadesDeAcoes() {
-    // 1. Avisa a View para mostrar a mensagem de Loading
     this.acoesView.mostrarLoading();
-
     try {
-      // 2. O Controller pede os dados ao Repositório
       const precoMaximo = 10.0;
       const oportunidades =
         await this.acaoRepositorio.buscarOportunidades(precoMaximo);
-
-      // 3. O Controller entrega os dados mastigados para a View desenhar
       this.acoesView.atualizar(oportunidades);
     } catch (erro) {
       console.error("Erro no fluxo de ações:", erro);
