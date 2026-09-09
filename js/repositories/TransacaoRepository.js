@@ -26,6 +26,18 @@ export class TransacaoRepository {
     return resultado.data;
   }
 
+  async removerTransacao(id) {
+    const query = `
+    mutation DeletarTransacao($id: Int!) {
+      removerTransacao(id: $id)
+    }
+  `;
+
+    const data = await this._executar(query, { id: id });
+
+    return data.removerTransacao;
+  }
+
   async buscarTodas() {
     const minhaQuery = `
       query {

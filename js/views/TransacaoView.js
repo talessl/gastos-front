@@ -11,6 +11,7 @@ export class TransacaoView {
       html += `<p> 
         ${transacao.observacao} - 
         <span class="${classeCss}">R$ ${transacao.valor} (${transacao.tipo})</span> - ${new Date(transacao.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+        <button class="btn-excluir" data-id="${transacao.id}" style="margin-left: 10px; cursor: pointer;">🗑️</button>
       </p>`;
     });
 

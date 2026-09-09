@@ -41,6 +41,15 @@ export class AppController {
       .getElementById("btn-buscar-acoes")
       .addEventListener("click", () => this.buscarOportunidadesDeAcoes());
 
+    document
+      .getElementById("painel-transacoes")
+      .addEventListener("click", (event) => {
+        if (event.target.classList.contains("btn-excluir")) {
+          const id = event.target.getAttribute("data-id");
+          this.remover(Number(id));
+        }
+      });
+
     this.carregarDados();
   }
 
@@ -85,6 +94,21 @@ export class AppController {
     await this.carregarDados();
 
     document.getElementById("form-transacao").reset();
+  }
+
+  async remover(id) {
+    if (!confirm("Tem certeza que deseja apagar este gasto?")) {
+      return;
+    }
+
+    try {
+      await this.repositorio.removerTransacao(id);
+
+      await this.carregarDados();
+    } catch (erro) {
+      console.error("Erro ao excluir transação:", erro);
+      alert(`Falha ao excluir: ${erro.message}`);
+    }
   }
 
   calcularSaldo(lista = this.transacoes) {
