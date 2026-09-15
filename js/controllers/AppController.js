@@ -1,22 +1,26 @@
 import { Transacao, TipoTransacao } from "../models/Transacao.js";
 import { TransacaoRepository } from "../repositories/TransacaoRepository.js";
 import { AcaoRepository } from "../repositories/AcaoRepository.js";
-import { CalendarioView } from "../views/CalendarioView.js";
 import { TransacaoView } from "../views/TransacaoView.js";
 import { ModalView } from "../views/ModalView.js";
 import { AcoesView } from "../views/AcoesView.js";
 import { AuthController } from "./AuthController.js";
+import { CalendarioController } from "./CalendarioController.js";
 
 export class AppController {
   constructor() {
     this.repositorio = new TransacaoRepository();
     this.acaoRepositorio = new AcaoRepository();
-    this.calendarioView = new CalendarioView();
     this.transacaoView = new TransacaoView();
     this.modalView = new ModalView();
     this.acoesView = new AcoesView();
 
     this.transacoes = [];
+
+    this.calendarioController = new CalendarioController(
+      (data) => this.filtrarPorData(data),
+      (ano, mes) => this.aoTrocarMesDoCalendario(ano, mes),
+    );
 
     // AuthController avisa o AppController quando o login acontece
     // this.authController = new AuthController(() => this.carregarDados());
@@ -64,7 +68,22 @@ export class AppController {
   async carregarDados() {
     this.transacoes = await this.repositorio.buscarTodas();
     this.mostrarTodas();
-    this.calendarioView.desenharCalendario((data) => this.filtrarPorData(data));
+    this.atualizarSaldoTotal();
+  }
+
+  aoTrocarMesDoCalendario(ano, mes) {
+    // Exemplo futuro: this.repositorio.buscarPorMes(ano, mes)
+  }
+
+  atualizarSaldoTotal() {
+    const saldo = this.calcularSaldo(this.transacoes);
+    const elemento = document.getElementById("valor-saldo");
+    if (elemento) {
+      elemento.textContent = saldo.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+    }
   }
 
   async limparTodas() {

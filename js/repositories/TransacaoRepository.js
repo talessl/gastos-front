@@ -86,7 +86,7 @@ export class TransacaoRepository {
   async limparTudo() {
     const minhaMutation = `
       mutation {
-        limparTransacoes
+        limparTodasTransacoes
       }
     `;
 

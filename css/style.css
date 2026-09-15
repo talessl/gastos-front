@@ -23,13 +23,6 @@ h1 {
 
 /* 3. O Calendário em Grade (Grid) */
 #calendario {
-  display: grid;
-  grid-template-columns: repeat(
-    7,
-    1fr
-  ); /* 7 colunas de tamanho igual (1 fraction) */
-  gap: 10px; /* Espaço entre os botões */
-
   /* Efeito de cartão moderno */
   background: white;
   padding: 20px;
@@ -38,20 +31,87 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* 4. Estilo dos botões dos dias */
-#calendario button {
-  padding: 15px 5px;
+.calendario-dias {
+  display: grid;
+  grid-template-columns: repeat(
+    7,
+    1fr
+  ); /* 7 colunas de tamanho igual (1 fraction) */
+  gap: 10px; /* Espaço entre os botões */
+}
+
+.calendario-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendario-titulo {
+  font-weight: bold;
+  color: #374151;
+  font-size: 18px;
+}
+
+.btn-navegar-mes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e7ff;
+  color: #4f46e5;
   border: none;
-  background-color: #e0e7ff; /* Azul bem clarinho */
-  color: #4f46e5; /* Texto roxo/azul */
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  line-height: 1;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-navegar-mes:hover {
+  background: #4f46e5;
+  color: white;
+}
+
+#calendario .calendario-dias button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 5px;
+  border: none;
+  background-color: #e0e7ff;
+  color: #4f46e5;
   border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.dia-numero {
   font-weight: bold;
-  transition: 0.2s; /* Animação suave ao passar o mouse */
+  font-size: 16px;
+}
+
+.dia-semana {
+  font-size: 11px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.dia-fim-de-semana {
+  background-color: #fef3c7; /* um amarelo suave pra destacar fim de semana */
+  color: #92400e;
+}
+
+.dia-fim-de-semana:hover {
+  background-color: #f59e0b;
+  color: white;
 }
 
 /* Efeito ao passar o mouse (Hover) */
-#calendario button:hover {
+#calendario .calendario-dias button:hover {
   background-color: #4f46e5;
   color: white;
   transform: scale(1.05); /* Dá uma leve crescida no botão */
@@ -281,14 +341,89 @@ h1 {
   }
 }
 
+.card-saldo {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.card-saldo-label {
+  display: block;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.card-saldo-valor {
+  display: block;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.acoes-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.btn-secundario {
+  background: white;
+  color: #4f46e5;
+  border: 1px solid #e0e7ff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-perigo-discreto {
+  background: transparent;
+  color: #ef4444;
+  border: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.estado-vazio {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+}
+
+.estado-vazio strong {
+  display: block;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.btn-excluir {
+  background: none;
+  border: none;
+  font-size: 16px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.btn-excluir:hover {
+  opacity: 1;
+}
+
 /* 1. O Container (Card principal) */
 .painel-acoes {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 24px;
-  max-width: 500px; /* Mantém o card com um tamanho elegante */
-  margin: 20px auto;
+  max-width: none; /* Ocupa a largura total da coluna direita */
+  margin: 20px 0 0 0;
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
@@ -361,4 +496,14 @@ h1 {
   margin-top: 8px;
   color: #64748b;
   font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .card-saldo-valor {
+    font-size: 32px;
+  }
 }

@@ -21,6 +21,10 @@
       </div> -->
     <!-- Título principal -->
     <h1>Meu Gasto Mensal</h1>
+<div class="card-saldo">
+  <span class="card-saldo-label">Saldo do mês</span>
+  <span id="valor-saldo" class="card-saldo-valor">R$ 0,00</span>
+</div>
 
     <!-- O nosso novo container que vai dividir a tela em duas partes -->
     <div class="dashboard">
@@ -56,8 +60,10 @@
       <!-- COLUNA DA DIREITA -->
       <div class="coluna-direita">
         <!-- O nosso novo botão de limpar o filtro -->
-        <button id="btn-ver-todos">Ver Todas as Transações</button>
-        <button id="btn-limpar-tudo">Limpar Tudo</button>
+        <div class="acoes-topo">
+  <button id="btn-ver-todos" class="btn-secundario">Ver todas</button>
+  <button id="btn-limpar-tudo" class="btn-perigo-discreto">Limpar tudo</button>
+</div>
 
         <div id="painel-transacoes"></div>
         <div class="painel-acoes">
