@@ -55,6 +55,36 @@ export class TransacaoRepository {
     return data.buscarTransacoes;
   }
 
+  async atualizarTransacao(id, dados) {
+    const minhaMutation = `
+      mutation AtualizarTransacao($id: Int!, $valor: Float!, $tipo: String!, $observacao: String!, $data: String!) {
+        atualizarTransacao(
+          id: $id,
+          valor: $valor,
+          tipo: $tipo,
+          observacao: $observacao,
+          data: $data
+        ) {
+          id
+          valor
+          tipo
+          observacao
+          data
+        }
+      }
+    `;
+
+    const data = await this._executar(minhaMutation, {
+      id: id,
+      valor: dados.valor,
+      tipo: dados.tipo,
+      observacao: dados.observacao,
+      data: dados.data,
+    });
+
+    return data.atualizarTransacao;
+  }
+
   async salvar(transacao) {
     const minhaMutation = `
       mutation AdicionarTransacao($valor: Float!, $tipo: String!, $observacao: String!, $data: String!) {

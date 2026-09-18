@@ -9,32 +9,83 @@
   <body>
     <div id="auth-container"></div>
 
-   
     <!-- <div id="app-container" style="display: none;"> -->
     <div id="app-container">
-
-      
       <!-- <div style="text-align: right; padding: 10px 20px;">
         <button onclick="localStorage.removeItem('token'); location.reload();" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
           Sair da Conta
         </button>
       </div> -->
-    <!-- Título principal -->
-    <h1>Meu Gasto Mensal</h1>
-<div class="card-saldo">
-  <span class="card-saldo-label">Saldo do mês</span>
-  <span id="valor-saldo" class="card-saldo-valor">R$ 0,00</span>
-</div>
+      <!-- Título principal -->
+      <h1>Meu Gasto Mensal</h1>
+      <div class="card-saldo">
+        <span class="card-saldo-label">Saldo do mês</span>
+        <span id="valor-saldo" class="card-saldo-valor">R$ 0,00</span>
+      </div>
 
-    <!-- O nosso novo container que vai dividir a tela em duas partes -->
-    <div class="dashboard">
-      <!-- COLUNA DA ESQUERDA -->
-      <div class="coluna-esquerda">
-        <h2 style="margin-bottom: 15px; color: #374151">Dias do Mês</h2>
-        <div id="calendario"></div>
+      <!-- O nosso novo container que vai dividir a tela em duas partes -->
+      <div class="dashboard">
+        <!-- COLUNA DA ESQUERDA -->
+
+        <div class="coluna-esquerda">
+          <!-- Nova div envolvendo os dois elementos -->
+          <div class="cabecalho-esquerda">
+            <h2 style="color: #374151; margin: 0">Dias do Mês</h2>
+            <button id="btn-nova-transacao" class="btn-secundario">
+              + Nova transação
+            </button>
+          </div>
+
+          <div id="calendario"></div>
+        </div>
+
+        <!-- COLUNA DA DIREITA -->
+        <div class="coluna-direita">
+          <!-- O nosso novo botão de limpar o filtro -->
+          <div class="acoes-topo">
+            <button id="btn-ver-todos" class="btn-secundario">Ver todas</button>
+            <button id="btn-limpar-tudo" class="btn-perigo-discreto">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div id="painel-transacoes"></div>
+          <div class="painel-acoes">
+            <h2>🎯 Explorar Mercado B3</h2>
+
+            <!-- Nova Área de Pesquisa Livre -->
+            <div class="busca-acao-container">
+              <input
+                type="text"
+                id="input-ticker"
+                placeholder="Buscar ativo (Ex: PETR4, VALE3)"
+                maxlength="6"
+              />
+              <button id="btn-buscar-ticker" class="btn-secundario">
+                Consultar
+              </button>
+            </div>
+
+            <!-- Divisor visual simples -->
+            <div class="divisor-acoes">ou use um filtro rápido</div>
+
+            <!-- Botão da sua estratégia atual -->
+            <button id="btn-buscar-acoes">
+              🔍 Garimpar Oportunidades (< R$ 10)
+            </button>
+
+            <ul id="lista-acoes"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-transacao" class="modal-oculto">
+      <div class="modal-conteudo">
+        <h3 id="titulo-modal-transacao">Nova transação</h3>
 
         <form id="form-transacao">
-          <!-- (Deixe todos os seus inputs e o botão de Adicionar aqui dentro, exatamente como já estavam) -->
+          <input type="hidden" id="input-transacao-id" />
           <input
             type="number"
             id="input-valor"
@@ -53,26 +104,12 @@
             placeholder="Ex: Ifood, Salário"
           />
           <input type="date" id="input-data" />
-          <button type="submit">Adicionar</button>
+
+          <div class="modal-botoes">
+            <button type="button" id="btn-cancelar-transacao">Cancelar</button>
+            <button type="submit">Salvar</button>
+          </div>
         </form>
-      </div>
-
-      <!-- COLUNA DA DIREITA -->
-      <div class="coluna-direita">
-        <!-- O nosso novo botão de limpar o filtro -->
-        <div class="acoes-topo">
-  <button id="btn-ver-todos" class="btn-secundario">Ver todas</button>
-  <button id="btn-limpar-tudo" class="btn-perigo-discreto">Limpar tudo</button>
-</div>
-
-        <div id="painel-transacoes"></div>
-        <div class="painel-acoes">
-          <h2>🎯 Oportunidades na B3</h2>
-          <button id="btn-buscar-acoes">
-            Buscar Oportunidades (Abaixo de R$ 10)
-          </button>
-          <ul id="lista-acoes"></ul>
-        </div>
       </div>
     </div>
     <div id="modal-confirmacao" class="modal-oculto">

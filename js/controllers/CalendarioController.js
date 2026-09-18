@@ -8,6 +8,8 @@ export class CalendarioController {
     this.aoSelecionarDia = aoSelecionarDia;
     this.aoTrocarMes = aoTrocarMes;
 
+    this.datasDestacadas = [];
+
     const hoje = new Date();
     this.anoVisivel = hoje.getFullYear();
     this.mesVisivel = hoje.getMonth() + 1; // 1-12
@@ -15,10 +17,16 @@ export class CalendarioController {
     this.desenhar();
   }
 
+  atualizarDiasComTransacao(datas) {
+    this.datasDestacadas = datas;
+    this.desenhar();
+  }
+
   desenhar() {
     this.view.desenharCalendario(
       this.anoVisivel,
       this.mesVisivel,
+      this.datasDestacadas,
       (data) => this.aoSelecionarDia(data),
       (delta) => this.mudarMes(delta),
     );

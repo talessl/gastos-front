@@ -22,6 +22,15 @@ export class AcoesView {
       "<li>Erro ao carregar oportunidades. Verifique a conexão com a API.</li>";
   }
 
+  mostrarResultadoUnico(acao) {
+    this.listaAcoes.innerHTML = `
+      <li style="border-left: 4px solid #10b981;">
+        <strong>${acao.ticker}</strong> - R$ ${acao.precoAtual.toFixed(2)} <br>
+        <small>Cotação atualizada (Yahoo Finance)</small>
+      </li>
+    `;
+  }
+
   atualizar(oportunidades) {
     this.listaAcoes.innerHTML = ""; // Limpa a lista
 
