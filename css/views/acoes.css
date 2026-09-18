@@ -1,0 +1,107 @@
+.painel-acoes {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  max-width: none;
+  margin: 20px 0 0 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.painel-acoes h2 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#btn-buscar-acoes {
+  width: 100%;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  margin-bottom: 24px;
+}
+
+#btn-buscar-acoes:hover {
+  background-color: #1d4ed8;
+}
+
+#btn-buscar-acoes:active {
+  transform: scale(0.98);
+}
+
+#lista-acoes {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#lista-acoes li {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#lista-acoes li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+}
+
+#lista-acoes li strong {
+  color: #0f172a;
+  font-size: 18px;
+}
+
+#lista-acoes li small {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.busca-acao-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.busca-acao-container input {
+  flex: 1; /* Faz o input crescer e ocupar o espaço disponível */
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  text-transform: uppercase; /* Força o texto a ficar maiúsculo como nos Tickers da B3 */
+  transition: 0.2s;
+}
+
+.busca-acao-container input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.divisor-acoes {
+  text-align: center;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

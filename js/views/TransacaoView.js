@@ -5,17 +5,36 @@ export class TransacaoView {
 
   atualizar(lista, saldo) {
     let html = `<h2>Minhas Transações</h2>`;
+    if (lista.length === 0) {
+      html = `
+    <div class="estado-vazio">
+      <strong>Nenhuma transação ainda</strong>
+      Adicione a primeira usando o formulário ao lado.
+    </div>
+  `;
+    }
 
-    lista.forEach((transacao) => {
-      const classeCss = transacao.tipo === "LUCRO" ? "cor-lucro" : "cor-gasto";
-      html += `<p> 
+    lista
+      .sort((a, b) => b.data.localeCompare(a.data))
+      .forEach((transacao) => {
+        const classeCss =
+          transacao.tipo === "LUCRO" ? "cor-lucro" : "cor-gasto";
+        html += `<p> 
         ${transacao.observacao} - 
         <span class="${classeCss}">R$ ${transacao.valor} (${transacao.tipo})</span> - ${new Date(transacao.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+        <button class="btn-atualizar" data-id="${transacao.id}" style="margin-left: 10px; cursor: pointer;">✏️</button>
+        <button class="btn-excluir" data-id="${transacao.id}" style="margin-left: 10px; cursor: pointer;">🗑️</button>
       </p>`;
-    });
+      });
 
     const classeSaldo = saldo >= 0 ? "cor-lucro" : "cor-gasto";
-    html += `<h3>Saldo Final: <span class="${classeSaldo}">R$ ${saldo}</span></h3>`;
+
+    const saldoFormatado = saldo.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    html += `<h3>Saldo Final: <span class="${classeSaldo}">${saldoFormatado}</span></h3>`;
 
     this.painel.innerHTML = html;
   }

@@ -1,0 +1,38 @@
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.card-saldo {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.card-saldo-label {
+  display: block;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.card-saldo-valor {
+  display: block;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+  .card-saldo-valor {
+    font-size: 32px;
+  }
+}

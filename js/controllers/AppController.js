@@ -1,30 +1,43 @@
 import { Transacao, TipoTransacao } from "../models/Transacao.js";
 import { TransacaoRepository } from "../repositories/TransacaoRepository.js";
 import { AcaoRepository } from "../repositories/AcaoRepository.js";
-import { CalendarioView } from "../views/CalendarioView.js";
 import { TransacaoView } from "../views/TransacaoView.js";
 import { ModalView } from "../views/ModalView.js";
 import { AcoesView } from "../views/AcoesView.js";
 import { AuthController } from "./AuthController.js";
+import { TransacaoFormView } from "../views/TransacaoFormView.js";
+
+import { CalendarioController } from "./CalendarioController.js";
 
 export class AppController {
   constructor() {
     this.repositorio = new TransacaoRepository();
     this.acaoRepositorio = new AcaoRepository();
-    this.calendarioView = new CalendarioView();
     this.transacaoView = new TransacaoView();
-    this.modalView = new ModalView();
+    this.modalConfirmacao = new ModalView("modal-confirmacao");
+    this.transacaoFormView = new TransacaoFormView((dados, idEmEdicao) =>
+      this.salvarFormulario(dados, idEmEdicao),
+    );
     this.acoesView = new AcoesView();
 
     this.transacoes = [];
 
-    // AuthController avisa o AppController quando o login acontece
-    this.authController = new AuthController(() => this.carregarDados());
-    this.authController.verificarAutenticacao();
+    this.calendarioController = new CalendarioController(
+      (data) => this.filtrarPorData(data),
+      (ano, mes) => this.aoTrocarMesDoCalendario(ano, mes),
+    );
 
     document
-      .getElementById("form-transacao")
-      .addEventListener("submit", (event) => this.adicionar(event));
+      .getElementById("btn-nova-transacao")
+      .addEventListener("click", () => this.transacaoFormView.abrirParaCriar());
+    document
+      .getElementById("btn-buscar-ticker")
+      .addEventListener("click", () => this.buscarAtivoEspecifico());
+
+    // AuthController avisa o AppController quando o login acontece
+    // this.authController = new AuthController(() => this.carregarDados());
+    // this.authController.verificarAutenticacao();
+
     document
       .getElementById("btn-ver-todos")
       .addEventListener("click", () => this.mostrarTodas());
@@ -40,20 +53,88 @@ export class AppController {
     document
       .getElementById("btn-buscar-acoes")
       .addEventListener("click", () => this.buscarOportunidadesDeAcoes());
+
+    document
+      .getElementById("painel-transacoes")
+      .addEventListener("click", (event) => {
+        if (event.target.classList.contains("btn-excluir")) {
+          const id = event.target.getAttribute("data-id");
+          this.remover(Number(id));
+        }
+        if (event.target.classList.contains("btn-atualizar")) {
+          const id = event.target.getAttribute("data-id");
+          this.atualizarTransacao(Number(id));
+        }
+      });
+
+    this.carregarDados();
   }
 
   abrirModal() {
-    this.modalView.abrir();
+    this.modalConfirmacao.abrir();
   }
 
   fecharModal() {
-    this.modalView.fechar();
+    this.modalConfirmacao.fechar();
+  }
+
+  async salvarFormulario(dados, idEmEdicao) {
+    try {
+      if (idEmEdicao) {
+        await this.repositorio.atualizarTransacao(idEmEdicao, dados);
+      } else {
+        const novaTransacao = new Transacao(
+          dados.valor,
+          dados.tipo,
+          dados.observacao,
+          dados.data,
+        );
+        await this.repositorio.salvar(novaTransacao);
+      }
+      await this.carregarDados();
+      this.transacaoFormView.fechar();
+    } catch (erro) {
+      console.error("Erro ao salvar transação:", erro);
+      alert(`Falha ao salvar: ${erro.message}`);
+    }
+  }
+
+  atualizarTransacao(id) {
+    const transacao = this.transacoes.find((t) => String(t.id) === String(id));
+    if (!transacao) {
+      console.warn(`Transação ${id} não encontrada para edição.`);
+      return;
+    }
+
+    this.transacaoFormView.abrirParaEditar(transacao);
   }
 
   async carregarDados() {
     this.transacoes = await this.repositorio.buscarTodas();
     this.mostrarTodas();
-    this.calendarioView.desenharCalendario((data) => this.filtrarPorData(data));
+    this.atualizarSaldoTotal();
+
+    const datasComTransacao = this.transacoes.map((t) =>
+      String(t.data).substring(0, 10),
+    );
+    const datasUnicas = [...new Set(datasComTransacao)];
+
+    this.calendarioController.atualizarDiasComTransacao(datasUnicas);
+  }
+
+  aoTrocarMesDoCalendario(ano, mes) {
+    // Exemplo futuro: this.repositorio.buscarPorMes(ano, mes)
+  }
+
+  atualizarSaldoTotal() {
+    const saldo = this.calcularSaldo(this.transacoes);
+    const elemento = document.getElementById("valor-saldo");
+    if (elemento) {
+      elemento.textContent = saldo.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+    }
   }
 
   async limparTodas() {
@@ -70,19 +151,19 @@ export class AppController {
     );
   }
 
-  async adicionar(event) {
-    event.preventDefault();
-    const valor = parseFloat(document.getElementById("input-valor").value);
-    const tipo = document.getElementById("input-tipo").value;
-    const observacao = document.getElementById("input-observacao").value;
-    const data = document.getElementById("input-data").value;
+  async remover(id) {
+    if (!confirm("Tem certeza que deseja apagar este gasto?")) {
+      return;
+    }
 
-    const novaTransacao = new Transacao(valor, tipo, observacao, data);
+    try {
+      await this.repositorio.removerTransacao(id);
 
-    await this.repositorio.salvar(novaTransacao);
-    await this.carregarDados();
-
-    document.getElementById("form-transacao").reset();
+      await this.carregarDados();
+    } catch (erro) {
+      console.error("Erro ao excluir transação:", erro);
+      alert(`Falha ao excluir: ${erro.message}`);
+    }
   }
 
   calcularSaldo(lista = this.transacoes) {
@@ -116,6 +197,26 @@ export class AppController {
       this.acoesView.atualizar(oportunidades);
     } catch (erro) {
       console.error("Erro no fluxo de ações:", erro);
+      this.acoesView.mostrarErro();
+    }
+  }
+
+  async buscarAtivoEspecifico() {
+    const input = document.getElementById("input-ticker");
+    const ticker = input.value.trim().toUpperCase();
+
+    if (!ticker) {
+      alert("Por favor, digite o código de uma ação (ex: PETR4).");
+      return;
+    }
+
+    this.acoesView.mostrarLoading();
+    try {
+      const acao = await this.acaoRepositorio.buscarAcaoEspecifica(ticker);
+      this.acoesView.mostrarResultadoUnico(acao);
+      input.value = ""; // Limpa o input após a busca
+    } catch (erro) {
+      console.error("Erro ao buscar ação:", erro);
       this.acoesView.mostrarErro();
     }
   }

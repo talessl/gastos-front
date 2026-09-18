@@ -30,4 +30,38 @@ export class AcaoRepository {
 
     return resultado.data.buscarOportunidades;
   }
+  async buscarAcaoEspecifica(ticker) {
+    const query = `
+      query BuscarAcao($ticker: String!) {
+        buscarAcao(ticker: $ticker) {
+          ticker
+          precoAtual
+        }
+      }
+    `;
+
+    try {
+      const resposta = await fetch("http://localhost:4000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: { ticker: ticker },
+        }),
+      });
+
+      const json = await resposta.json();
+
+      if (json.errors) {
+        throw new Error(json.errors[0].message);
+      }
+
+      return json.data.buscarAcao;
+    } catch (erro) {
+      console.error("Erro na requisição GraphQL:", erro);
+      throw erro; // Repassa o erro para o AppController tratar e mostrar na tela
+    }
+  }
 }

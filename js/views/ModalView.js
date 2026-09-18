@@ -1,6 +1,6 @@
 export class ModalView {
-  constructor() {
-    this.modal = document.getElementById("modal-confirmacao");
+  constructor(idModal) {
+    this.modal = document.getElementById(idModal);
   }
 
   abrir() {
