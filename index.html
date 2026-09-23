@@ -37,6 +37,12 @@
           </div>
 
           <div id="calendario"></div>
+          <div id="painel-grafico">
+            <p class="grafico-vazio">
+              Clique em uma ação da lista ou pesquise um ticker para ver o
+              gráfico.
+            </p>
+          </div>
         </div>
 
         <!-- COLUNA DA DIREITA -->
@@ -71,7 +77,7 @@
 
             <!-- Botão da sua estratégia atual -->
             <button id="btn-buscar-acoes">
-              🔍 Garimpar Oportunidades (< R$ 10)
+              🔍 Garimpar Oportunidades (&lt; R$ 10)
             </button>
 
             <ul id="lista-acoes"></ul>
@@ -127,6 +133,7 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

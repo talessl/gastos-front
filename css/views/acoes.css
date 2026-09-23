@@ -105,3 +105,22 @@
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
+#painel-grafico {
+  margin-top: 16px;
+  min-width: 0;
+}
+
+.grafico-vazio {
+  color: #888;
+  text-align: center;
+  padding: 24px 0;
+}
+
+#lista-acoes {
+  max-height: 480px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

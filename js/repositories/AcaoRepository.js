@@ -36,6 +36,8 @@ export class AcaoRepository {
         buscarAcao(ticker: $ticker) {
           ticker
           precoAtual
+          close
+          datas
         }
       }
     `;

@@ -18,8 +18,9 @@ export class AppController {
     this.transacaoFormView = new TransacaoFormView((dados, idEmEdicao) =>
       this.salvarFormulario(dados, idEmEdicao),
     );
-    this.acoesView = new AcoesView();
-
+    this.acoesView = new AcoesView((ticker) =>
+      this.buscarAtivoEspecifico(ticker),
+    );
     this.transacoes = [];
 
     this.calendarioController = new CalendarioController(
@@ -201,23 +202,24 @@ export class AppController {
     }
   }
 
-  async buscarAtivoEspecifico() {
+  async buscarAtivoEspecifico(tickerClicado) {
     const input = document.getElementById("input-ticker");
-    const ticker = input.value.trim().toUpperCase();
+    const ticker = (tickerClicado ?? input.value).trim().toUpperCase();
 
     if (!ticker) {
       alert("Por favor, digite o código de uma ação (ex: PETR4).");
       return;
     }
 
-    this.acoesView.mostrarLoading();
+    input.value = ticker; // mostra qual ação está no gráfico
+    this.acoesView.mostrarLoadingGrafico();
+
     try {
       const acao = await this.acaoRepositorio.buscarAcaoEspecifica(ticker);
       this.acoesView.mostrarResultadoUnico(acao);
-      input.value = ""; // Limpa o input após a busca
     } catch (erro) {
       console.error("Erro ao buscar ação:", erro);
-      this.acoesView.mostrarErro();
+      this.acoesView.mostrarErroGrafico(erro.message);
     }
   }
 }
